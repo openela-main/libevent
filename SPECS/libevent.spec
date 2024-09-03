@@ -2,7 +2,7 @@
 
 Name:           libevent
 Version:        2.1.12
-Release:        6%{?dist}
+Release:        8%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 # arc4random.c, which is used in build, is ISC. The rest is BSD.
@@ -31,6 +31,11 @@ Patch03: 0001-build-add-doxygen-to-all.patch
 # issue is fixed.
 # https://github.com/transmission/transmission/issues/1437
 Patch04: 0001-Revert-Fix-checking-return-value-of-the-evdns_base_r.patch
+# 3 cherry-picked upstream commits adjusted to not break ABI
+# https://github.com/libevent/libevent/commit/afa66ea
+# https://github.com/libevent/libevent/commit/aea752b
+# https://github.com/libevent/libevent/commit/2385638
+Patch05: 0001-http-eliminate-redundant-bev-fd-manipulating-and-cac.patch
 
 %description
 The libevent API provides a mechanism to execute a callback function
@@ -65,6 +70,7 @@ This package contains the development documentation for %{name}.
 %patch02 -p1 -b .fix-install
 %patch03 -p1 -b .fix-install-2
 %patch04 -p1 -b .revert-problematic-change
+%patch05 -p1 -b .fix-duplicate-fd-handling
 
 pathfix.py -i %{__python3} -pn test/check-dumpevents.py \
                                event_rpcgen.py
@@ -148,6 +154,14 @@ mkdir -p $RPM_BUILD_ROOT/%{develdocdir}/sample
 %doc %{develdocdir}/
 
 %changelog
+* Tue Aug 20 2024 Pavol Žáčik <pzacik@redhat.com> - 2.1.12-8
+- Rework the patch from 2.1.12-7 to prevent ABI changes.
+- Related: RHEL-26128
+
+* Tue Aug 13 2024 Pavol Žáčik <pzacik@redhat.com> - 2.1.12-7
+- Patch duplicate file descriptor manipulation
+- Resolves: RHEL-26128
+
 * Mon Aug 09 2021 Mohan Boddu <mboddu@redhat.com> - 2.1.12-6
 - Rebuilt for IMA sigs, glibc 2.34, aarch64 flags
   Related: rhbz#1991688
