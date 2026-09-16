@@ -2,7 +2,7 @@
 
 Name:           libevent
 Version:        2.1.8
-Release:        5%{?dist}
+Release:        11%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 # arc4random.c, which is used in build, is ISC. The rest is BSD.
@@ -21,6 +21,19 @@ Patch01: libevent-nonettests.patch
 # Port the python scripts to Python 3
 # Fixed upstream: https://github.com/libevent/libevent/commit/8b0aa7b36a3250fad4953f194c8a94ab25032583
 Patch02: port-scripts-to-python3.patch
+# https://github.com/libevent/libevent/commit/10abb34b8dc3e1184de315dd261ce4b77563cda6
+# https://github.com/libevent/libevent/commit/ac38703b2d312200c4f967f02936af0118d384a0
+Patch03: libevent-2.1.8-CVE-2026-63382.patch
+# https://github.com/libevent/libevent/commit/ef38f926e9cd1f082416c6fff13587bc1f431d72
+Patch04: libevent-2.1.8-CVE-2026-63388.patch
+# https://github.com/libevent/libevent/commit/5e3c6ebe342b34c5a9bcf48e9a32ad6708b9c416
+Patch05: libevent-2.1.8-CVE-2026-63384.patch
+# https://github.com/libevent/libevent/commit/91ed8745eebabdd27592a83d350338a8c4626321
+Patch06: libevent-2.1.8-CVE-2026-63383.patch
+# https://github.com/libevent/libevent/commit/377b9022c3ac61aa4540b5dc4b70c60bf74c663d
+Patch07: libevent-2.1.8-CVE-2026-63387.patch
+# https://github.com/libevent/libevent/commit/9170dd35e64714613e8d13b290587cfc28e258e2
+Patch08: libevent-2.1.8-CVE-2026-63385.patch
 
 %description
 The libevent API provides a mechanism to execute a callback function
@@ -53,6 +66,12 @@ This package contains the development documentation for %{name}.
 %setup -q -n libevent-%{version}-stable
 %patch01 -p1 -b .nonettests
 %patch02 -p1 -b .py3port
+%patch03 -p1 -b .CVE-2026-63382
+%patch04 -p1 -b .CVE-2026-63388
+%patch05 -p1 -b .CVE-2026-63384
+%patch06 -p1 -b .CVE-2026-63383
+%patch07 -p1 -b .CVE-2026-63387
+%patch08 -p1 -b .CVE-2026-63385
 pathfix.py -i %{__python3} -pn test/check-dumpevents.py \
                                         event_rpcgen.py
 
@@ -136,6 +155,30 @@ mkdir -p $RPM_BUILD_ROOT/%{develdocdir}/sample
 %doc %{develdocdir}/
 
 %changelog
+* Wed Sep 02 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.1.8-11
+- Fix CVE-2026-63385: HTTP header injection via CRLF in header values
+- Resolves: RHEL-253566
+
+* Wed Sep 02 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.1.8-10
+- Fix CVE-2026-63387: out-of-bounds write in evdns dnsname_to_labels
+- Resolves: RHEL-249889
+
+* Wed Sep 02 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.1.8-9
+- Fix CVE-2026-63383: out-of-bounds read in decode_tag_internal
+- Resolves: RHEL-250240
+
+* Wed Sep 02 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.1.8-8
+- Fix CVE-2026-63384: integer overflow in evtag_unmarshal_header
+- Resolves: RHEL-250071
+
+* Wed Sep 02 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.1.8-7
+- Fix CVE-2026-63388: heap out-of-bounds write via AF_UNIX+http+NDEBUG
+- Resolves: RHEL-250045
+
+* Wed Sep 02 2026 RHEL Packaging Agent <redhat-ymir-agent@redhat.com> - 2.1.8-6
+- Fix CVE-2026-63382: HTTP request smuggling via Transfer-Encoding
+- Resolves: RHEL-253525
+
 * Wed Oct 10 2018 Ondřej Lysoněk <olysonek@redhat.com> - 2.1.8-5
 - Install documentation files to an unversioned directory
 - Resolves: rhbz#1638032
