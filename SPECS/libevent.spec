@@ -1,8 +1,8 @@
 %global develdocdir %{_docdir}/%{name}-devel
 
 Name:           libevent
-Version:        2.1.12
-Release:        8%{?dist}
+Version:        2.1.13
+Release:        1%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 # arc4random.c, which is used in build, is ISC. The rest is BSD.
@@ -11,9 +11,9 @@ URL:            http://libevent.org/
 Source0:        https://github.com/libevent/libevent/releases/download/release-%{version}-stable/libevent-%{version}-stable.tar.gz
 
 BuildRequires: make
-BuildRequires:  gcc
+BuildRequires: gcc
 # Needed for ./autogen.sh:
-BuildRequires:  automake libtool
+BuildRequires: automake libtool
 %if ! 0%{?_module_build}
 BuildRequires: doxygen
 %endif
@@ -65,14 +65,9 @@ BuildArch: noarch
 This package contains the development documentation for %{name}.
 
 %prep
-%setup -q -n libevent-%{version}-stable
-%patch01 -p1 -b .nonettests
-%patch02 -p1 -b .fix-install
-%patch03 -p1 -b .fix-install-2
-%patch04 -p1 -b .revert-problematic-change
-%patch05 -p1 -b .fix-duplicate-fd-handling
+%autosetup -p1 -n libevent-%{version}-stable
 
-pathfix.py -i %{__python3} -pn test/check-dumpevents.py \
+%{__python3} %{_rpmconfigdir}/redhat/pathfix.py -i %{__python3} -pn test/check-dumpevents.py \
                                event_rpcgen.py
 
 %build
@@ -154,6 +149,18 @@ mkdir -p $RPM_BUILD_ROOT/%{develdocdir}/sample
 %doc %{develdocdir}/
 
 %changelog
+* Wed Sep 02 2026 Fedor Vorobev <fvorobev@redhat.com> - 2.1.13-1
+- Update to 2.1.13.
+- The following CVEs are fixed:
+-   CVE-2026-63383
+-   CVE-2026-63384
+-   CVE-2026-63388
+-   CVE-2026-63387
+-   CVE-2026-63379
+-   CVE-2026-63381
+-   CVE-2026-63382
+-   CVE-2026-63385
+
 * Tue Aug 20 2024 Pavol Žáčik <pzacik@redhat.com> - 2.1.12-8
 - Rework the patch from 2.1.12-7 to prevent ABI changes.
 - Related: RHEL-26128
