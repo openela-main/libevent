@@ -1,8 +1,8 @@
 %global develdocdir %{_docdir}/%{name}-devel
 
 Name:           libevent
-Version:        2.1.12
-Release:        16%{?dist}
+Version:        2.1.13
+Release:        1%{?dist}
 Summary:        Abstract asynchronous event notification library
 
 # arc4random.c, which is used in build, is ISC. The rest is BSD-3-Clause.
@@ -149,6 +149,18 @@ mkdir -p $RPM_BUILD_ROOT/%{develdocdir}/sample
 %doc %{develdocdir}/
 
 %changelog
+* Thu Sep 03 2026 Fedor Vorobev <fvorobev@redhat.com> - 2.1.13-1
+- Update to 2.1.13.
+- The following CVEs are fixed:
+-   CVE-2026-63383
+-   CVE-2026-63384
+-   CVE-2026-63388
+-   CVE-2026-63387
+-   CVE-2026-63379
+-   CVE-2026-63381
+-   CVE-2026-63382
+-   CVE-2026-63385
+
 * Tue Oct 29 2024 Troy Dawson <tdawson@redhat.com> - 2.1.12-16
 - Bump release for October 2024 mass rebuild:
   Resolves: RHEL-64018
